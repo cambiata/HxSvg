@@ -15,6 +15,8 @@ Work-in-progress proof-of-concept SVG library for Haxe. Based on NME/OpenFL svg 
 - Hugh Sanderson and Joshua Granick for all core code
 - Carlos Ballesteros Velasco for Haxe-Cairo
 
+### Screenshot
+Actual pdf output from the commands-to-cairo renderer, using Haxe-Cairo:
 - ![screen](/screen.png?raw=true "screen")
 
 
