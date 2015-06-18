@@ -1,0 +1,26 @@
+-neko bin-neko/Example.n
+-cp src
+-main Example
+-cmd neko bin-neko/Example.n
+
+--next
+
+-swf bin-swf/Example.swf
+-cp src
+-main Example
+
+--next
+
+-java bin-java
+-cp src
+-main Example
+-cmd java -jar bin-java/Example.jar
+
+--next
+
+-cs bin-cs
+-cp src
+-main Example
+-cmd cd bin-cs/bin
+-cmd Example.exe
+
