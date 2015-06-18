@@ -11,6 +11,20 @@
 
 --next
 
+-js bin-js/Example.js
+-cp src
+-main Example
+-cmd node bin-js/Example.js
+
+#--next
+
+#-cpp bin-cpp
+#-cp src
+#-main Example
+#-cmd bin-cpp\Example.exe
+
+--next
+
 -java bin-java
 -cp src
 -main Example

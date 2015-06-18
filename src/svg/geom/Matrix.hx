@@ -12,7 +12,7 @@ typedef Matrix = flash.geom.Matrix;
                                [  c   d ]
                                [  tx  ty]
 */
-class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end 
+class Matrix //#if cpp implements cpp.rtti.FieldNumericIntegerLookup #end 
 {
    public var a:Float;
    public var b:Float;
