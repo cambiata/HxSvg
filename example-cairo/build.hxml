@@ -1,0 +1,19 @@
+-neko bin-neko/ExampleCairo.n
+-cp src
+-cp ../src
+-lib hxcpp
+-main ExampleCairo
+#-cmd cd bin-neko
+#-cmd neko ExampleCairo.n
+
+
+--next
+
+-cpp bin-cpp
+-cp src
+-cp ../src
+-lib hxcpp
+-main ExampleCairo
+#-cmd cd bin-cpp
+#-cmd ExampleCairo.exe
+

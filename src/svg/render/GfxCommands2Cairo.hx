@@ -27,12 +27,14 @@ class GfxCommands2Cairo
 					case moveTo(x, y): context.moveTo(x, y);
 					case lineTo(x, y): context.lineTo(x, y);
 					case curveTo(x1, y1, x2, y2): curveToQ(context, x1, y1, x2, y2);
-					case _: //
+					case _: // TODO
 				}
-			}
+			}			
 			
+			// TODO : These settings are hardcoded for now...
 			context.setFillRule(CairoFillRule.EVEN_ODD);
-			context.setSourceRgb(0, 1, 0);
+			context.setSourceRgb(0, 0, 0);
+			
 			context.fill();			
 			
 		});
