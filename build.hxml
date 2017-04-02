@@ -1,40 +1,38 @@
--neko bin-neko/Example.n
--cp src
--main Example
--cmd neko bin-neko/Example.n
 
---next
-
--swf bin-swf/Example.swf
 -cp src
 -main Example
 
---next
+--each 
 
--js bin-js/Example.js
--cp src
--main Example
--cmd node bin-js/Example.js
+--interp
 
 #--next
 
-#-cpp bin-cpp
-#-cp src
-#-main Example
-#-cmd bin-cpp\Example.exe
+#-neko bin-neko/Example.n
+#-cmd neko bin-neko/Example.n
 
---next
+# --next
 
--java bin-java
--cp src
--main Example
--cmd java -jar bin-java/Example.jar
+# -swf bin-swf/Example.swf
 
---next
+# --next
 
--cs bin-cs
--cp src
--main Example
--cmd cd bin-cs/bin
--cmd Example.exe
+# -js bin-js/Example.js
+# -cmd node bin-js/Example.js
+
+# --next
+
+# -cpp bin-cpp
+# -cmd bin-cpp\Example.exe
+
+# --next
+
+# -java bin-java
+# -cmd java -jar bin-java/Example.jar
+
+# --next
+
+# -cs bin-cs
+# -cmd cd bin-cs/bin
+# -cmd Example.exe
 

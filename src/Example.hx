@@ -1,11 +1,13 @@
+import render.Svg2Commands;
 
 class Example
 {
 
 	static public function main() 
 	{		
-		var commands = svg.DebugRenderer.toCommands(Xml.parse(testClef));
-		trace(commands);
+		//var commands = svg.DebugRenderer.toCommands(Xml.parse(testClef));
+		var commands = render.Svg2Commands.toCommands(Xml.parse(testClef));
+		for (c in commands) trace(c);
 	}
 	
 	static var testSvg = '<svg height="100" width="100"><circle cx="50" cy="50" r="40" stroke="#000000" stroke-width="3" fill="#ff0000" /></svg>';
