@@ -1,5 +1,5 @@
 # HxSvg
-Work-in-progress proof-of-concept SVG library for Haxe. Based on NME/OpenFL svg solutions, but decoupled from flash drawing api. Runs on C# and Java targets. 
+Work-in-progress proof-of-concept SVG library for Haxe. Based on NME/OpenFL svg solutions, but decoupled from flash drawing api. Runs on all major Haxe targets, including C# and Java. 
 
 The SVG graphic information is abstracted to a list of graphic commands:
 ```haxe
