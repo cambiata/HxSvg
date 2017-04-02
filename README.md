@@ -1,11 +1,27 @@
 # HxSvg
 Work-in-progress proof-of-concept SVG library for Haxe. Based on NME/OpenFL svg solutions, but decoupled from flash drawing api. Runs on C# and Java targets. 
 
-The SVG graphic information is abstracted to a list of graphic commands. This can be interpreted/transformed for different targets. For example can cubic bezieer (used by flash drawing API) information be transformed to quadratic bezieers used by Cairo API.
+The SVG graphic information is abstracted to a list of graphic commands:
+```haxe
+enum GraphicCommand
+{
+	size(inWidth:Float, inHeight:Float);
+	beginGradientFill(grad:Gradient);
+	beginFill(color:Int, alpha:Float);
+	endFill;
+	lineStyle(style:LineStyle);
+	endLineStyle;
+	moveTo(inX:Float, inY:Float);
+	lineTo(inX:Float, inY:Float);
+	curveTo(inCX:Float, inCY:Float, inX:Float, inY:Float);
+	renderText(text:Text);
+}
+```
+
+This can be interpreted/transformed for different targets. For example can cubic bezieer (used by flash drawing API) information be transformed to quadratic bezieers used by Cairo API.
 
 ### Status
 - No actual rendering, except for experimental commands-to-cairo stuff.
-- Compiles and runs on neko, swf, js, java and C#
 - Simple neko/cairo and C++/cairo examples - example-cairo/
 
 ### Credits
