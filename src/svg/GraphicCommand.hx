@@ -1,11 +1,14 @@
-package format.gfx;
+package svg;
 
 import format.svg.Text;
+import format.gfx.*;
 /**
  * ...
  * @author Jonas Nyström
  */
-enum GfxCommand
+
+ 
+enum GraphicCommand
 {
 	size(inWidth:Float, inHeight:Float);
 	beginGradientFill(grad:Gradient);

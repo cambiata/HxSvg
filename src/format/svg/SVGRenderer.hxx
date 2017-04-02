@@ -1,25 +1,32 @@
-package svg;
+package format.svg;
+
+import format.svg.PathParser;
+import format.svg.PathSegment;
+
+import graphics.geom.Matrix;
+import graphics.geom.Rectangle;
 
 
+import graphics.display.GradientType;
+import graphics.display.SpreadMethod;
+import graphics.display.InterpolationMethod;
+import graphics.display.CapsStyle;
+import graphics.display.JointStyle;
+import graphics.display.LineScaleMode;
 
-import svg.geom.Matrix;
-import svg.geom.Rectangle;
-import svg.gfx.Gfx2Commands;
-import svg.gfx.Gfx2Haxe;
-import svg.gfx.GfxExtent;
-import svg.gfx.GfxTextFinder;
-import svg.gfx.LineStyle;
-import svg.PathParser;
-import svg.PathSegment;
-
-import svg.Grad;
-import svg.Group;
-import svg.FillType;
-import svg.gfx.Gfx;
+import format.svg.Grad;
+import format.svg.Group;
+import format.svg.FillType;
+import format.gfx.Gfx;
+import graphics.geom.Rectangle;
 
 
-class DebugRenderer
+typedef GroupPath = Array<String>;
+typedef ObjectFilter = String->GroupPath->Bool;
+
+class SVGRenderer
 {
+    public static var SQRT2:Float = Math.sqrt(2);
     public var width(default,null):Float;
     public var height(default,null):Float;
 
@@ -36,6 +43,7 @@ class DebugRenderer
     public function new(inSvg:SVGData,?inLayer:String)
     {
        mSvg = inSvg;
+
        width = mSvg.width;
        height = mSvg.height;
        mRoot = mSvg;
@@ -46,6 +54,18 @@ class DebugRenderer
              throw "Could not find SVG group: " + inLayer;
        }
     }
+
+    public static function toHaxe(inXML:Xml,?inFilter:ObjectFilter) : Array<String>
+    {
+       return new SVGRenderer(new SVGData(inXML,true)).iterate(new format.gfx.Gfx2Haxe(),inFilter).commands;
+    }
+
+/*
+    public static function toBytes(inXML:Xml,?inFilter:ObjectFilter) : format.gfx.GfxBytes
+    {
+       return new SVGRenderer(new SVGData(inXML,true)).iterate(new format.gfx.GfxBytes(),inFilter);
+    }
+*/
 
     public function iterate<T>(inGfx:T, ?inFilter:ObjectFilter) : T
     {
@@ -87,6 +107,11 @@ class DebugRenderer
        var geomOnly = mGfx.geometryOnly();
        if (!geomOnly)
        {
+          // Move to avoid the case of:
+          //  1. finish drawing line on last path
+          //  2. set fill=something
+          //  3. move (this draws in the fill)
+          //  4. continue with "real" drawing
           inPath.segments[0].toGfx(mGfx, context);
 
           switch(inPath.fill)
@@ -107,8 +132,8 @@ class DebugRenderer
           }
           else
           {
-             var style = new svg.gfx.LineStyle();
-             var scale = Math.sqrt(m.a*m.a + m.c*m.c);
+             var style = new format.gfx.LineStyle();
+             var scale = Math.sqrt(m.a*m.a + m.d*m.d)/SQRT2;
              style.thickness = inPath.stroke_width*scale;
              style.alpha = inPath.stroke_alpha*inPath.alpha;
              style.color = inPath.stroke_colour;
@@ -123,8 +148,13 @@ class DebugRenderer
        for(segment in inPath.segments)
           segment.toGfx(mGfx, context);
 
+
+       // endFill automatically close an open path
+       // by putting endLineStyle before endFill, the closing line is not drawn
+       // so an open path in inkscape stay open in openfl
+       // this does not affect closed path
+       mGfx.endLineStyle(); 
        mGfx.endFill();
-       mGfx.endLineStyle();
     }
 
 
@@ -159,10 +189,10 @@ class DebugRenderer
 
 
 
-    public function render(?inMatrix:Matrix, ?inFilter:ObjectFilter, ?inScaleRect:Rectangle,?inScaleW:Float, ?inScaleH:Float )
+    public function render(inGfx:Graphics,?inMatrix:Matrix, ?inFilter:ObjectFilter, ?inScaleRect:Rectangle,?inScaleW:Float, ?inScaleH:Float )
     {
     
-       //mGfx = new format.gfx.GfxGraphics(inGfx);
+       mGfx = new format.gfx.GfxGraphics(inGfx);
        if (inMatrix==null)
           mMatrix = new Matrix();
        else
@@ -176,9 +206,7 @@ class DebugRenderer
 
        iterateGroup(mRoot,inFilter==null);
     }
-
-
-    public function renderRect(inFilter:ObjectFilter,scaleRect:Rectangle,inBounds:Rectangle,inRect:Rectangle) : Void
+    public function renderRect(inGfx:Graphics,inFilter:ObjectFilter,scaleRect:Rectangle,inBounds:Rectangle,inRect:Rectangle) : Void
     {
        var matrix = new Matrix();
        matrix.tx = inRect.x-(inBounds.x);
@@ -187,13 +215,13 @@ class DebugRenderer
        {
           var extraX = inRect.width-(inBounds.width-scaleRect.width);
           var extraY = inRect.height-(inBounds.height-scaleRect.height);
-          render(matrix,inFilter,scaleRect, extraX, extraY );
+          render(inGfx,matrix,inFilter,scaleRect, extraX, extraY );
        }
        else
-         render(matrix,inFilter);
+         render(inGfx,matrix,inFilter);
     }
 
-    public function renderRect0(inFilter:ObjectFilter,scaleRect:Rectangle,inBounds:Rectangle,inRect:Rectangle) : Void
+    public function renderRect0(inGfx:Graphics,inFilter:ObjectFilter,scaleRect:Rectangle,inBounds:Rectangle,inRect:Rectangle) : Void
     {
        var matrix = new Matrix();
        matrix.tx = -(inBounds.x);
@@ -202,10 +230,10 @@ class DebugRenderer
        {
           var extraX = inRect.width-(inBounds.width-scaleRect.width);
           var extraY = inRect.height-(inBounds.height-scaleRect.height);
-          render(matrix,inFilter,scaleRect, extraX, extraY );
+          render(inGfx,matrix,inFilter,scaleRect, extraX, extraY );
        }
        else
-         render(matrix,inFilter);
+         render(inGfx,matrix,inFilter);
     }
 
 
@@ -216,7 +244,7 @@ class DebugRenderer
     {
        if (inIgnoreDot==null)
           inIgnoreDot = inFilter==null;
-       var gfx = new svg.gfx.GfxExtent();
+       var gfx = new format.gfx.GfxExtent();
        mGfx = gfx;
        if (inMatrix==null)
           mMatrix = new Matrix();
@@ -235,7 +263,7 @@ class DebugRenderer
     {
        mFilter = inFilter;
        mGroupPath = [];
-       var finder = new svg.gfx.GfxTextFinder();
+       var finder = new format.gfx.GfxTextFinder();
        mGfx = finder;
        iterateGroup(mRoot,false);
        return finder.text;
@@ -248,6 +276,58 @@ class DebugRenderer
        }, false  );
     }
 
+    public function renderObject(inObj:DisplayObject,inGfx:Graphics,
+                    ?inMatrix:Matrix,?inFilter:ObjectFilter,inScale9:Rectangle)
+    {
+       render(inGfx,inMatrix,inFilter,inScale9);
+       var rect = getExtent(inMatrix, function(_,groups) { return groups[1]==".scale9"; } );
+		 // TODO:
+		 /*
+       if (rect!=null)
+          inObj.scale9Grid = rect;
+       #if !flash
+       inObj.cacheAsBitmap = neash.Lib.IsOpenGL();
+       #end
+		 */
+    }
 
+    public function renderSprite(inObj:Sprite, ?inMatrix:Matrix,?inFilter:ObjectFilter, ?inScale9:Rectangle)
+    {
+       renderObject(inObj,inObj.graphics,inMatrix,inFilter,inScale9);
+    }
+
+    public function createShape(?inMatrix:Matrix,?inFilter:ObjectFilter, ?inScale9:Rectangle) : Shape
+    {
+       var shape = new Shape();
+       renderObject(shape,shape.graphics,inMatrix,inFilter,inScale9);
+       return shape;
+    }
+
+    public function namedShape(inName:String) : Shape
+    {
+       return createShape(null, function(name,_) { return name==inName; } );
+    }
+
+
+    public function renderBitmap(?inRect:Rectangle,inScale:Float = 1.0)
+    {
+       mMatrix = new Matrix(inScale,0,0,inScale, -inRect.x*inScale, -inRect.y*inScale);
+
+       var w = Std.int(Math.ceil( inRect==null ? width : inRect.width*inScale ));
+       var h = Std.int(Math.ceil( inRect==null ? width : inRect.height*inScale ));
+
+       var bmp = new openfl.display.BitmapData(w,h,true,#if (neko && !haxe3) { a: 0x00, rgb: 0x000000 } #else 0x00000000 #end);
+
+       var shape = new openfl.display.Shape();
+       mGfx = new format.gfx.GfxGraphics(shape.graphics);
+
+       mGroupPath = [];
+       iterateGroup(mRoot,true);
+
+       bmp.draw(shape);
+       mGfx = null;
+
+       return bmp;
+    }
 }
 

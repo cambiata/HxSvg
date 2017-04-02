@@ -1,8 +1,7 @@
 package format.svg;
 
 import graphics.geom.Matrix;
-import format.gfx.Gradient;
-//import flash.geom.Rectangle;
+import graphics.geom.Rectangle;
 
 import graphics.display.GradientType;
 import graphics.display.SpreadMethod;

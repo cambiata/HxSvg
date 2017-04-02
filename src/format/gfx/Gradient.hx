@@ -1,19 +1,12 @@
 package format.gfx;
 
 import graphics.geom.Matrix;
-
 import graphics.display.GradientType;
 import graphics.display.SpreadMethod;
 import graphics.display.InterpolationMethod;
+import graphics.display.CapsStyle;
 import graphics.display.JointStyle;
 import graphics.display.LineScaleMode;
-
-#if !flash 
-
-
-
-#end
-
 
 class Gradient
 {

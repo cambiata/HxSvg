@@ -1,8 +1,8 @@
-package render;
+package svg.render;
 import cairo.CairoContext;
 import cairo.CairoFillRule;
 import cairo.CairoPoint;
-import format.gfx.GfxCommand;
+import svg.GraphicCommand;
 
 /**
  * ...
@@ -12,9 +12,9 @@ class GfxCommands2Cairo
 {
 
 	var context:CairoContext;
-	var commands:Array<GfxCommand>;
+	var commands:Array<GraphicCommand>;
 
-	public function new(commands: Array<GfxCommand>, context:CairoContext)
+	public function new(commands: Array<GraphicCommand>, context:CairoContext)
 	{
 		this.commands = commands;
 		this.context = context;

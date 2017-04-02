@@ -1,7 +1,7 @@
-package render;
+package svg.render;
 
-import format.gfx.Gfx2Commands;
-import format.gfx.GfxCommand;
+import svg.GraphicCommands;
+import svg.GraphicCommand;
 import format.svg.BaseRenderer;
 import format.svg.SVGData;
 import svg.gfx.*;
@@ -9,11 +9,11 @@ import svg.gfx.*;
 class Svg2Commands
 {
 
-	static public function toCommands(svg:Xml):Array<GfxCommand>
+	static public function toCommands(svg:Xml):Array<GraphicCommand>
 	{
 		var inSvg = new SVGData(svg, true);
 		var renderer = new BaseRenderer(new SVGData(svg, true));
-		var commands = renderer.iterate(new Gfx2Commands(), null).commands;
+		var commands = renderer.iterate(new GraphicCommands(), null).commands;
 		return commands;
 	}
 

@@ -1,6 +1,6 @@
 package format.svg;
 
-import flash.geom.Matrix;
+import graphics.geom.Matrix;
 import graphics.display.GradientType;
 import graphics.display.SpreadMethod;
 import graphics.display.InterpolationMethod;

@@ -1,12 +1,11 @@
-import render.Svg2Commands;
+import svg.render.Svg2Commands;
 
 class Example
 {
 
 	static public function main() 
 	{		
-		//var commands = svg.DebugRenderer.toCommands(Xml.parse(testClef));
-		var commands = render.Svg2Commands.toCommands(Xml.parse(testClef));
+		var commands = svg.render.Svg2Commands.toCommands(Xml.parse(testClef));
 		for (c in commands) trace(c);
 	}
 	

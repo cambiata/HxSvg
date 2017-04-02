@@ -1,8 +1,7 @@
 package format.svg;
-//import nme.geom.Rectangle;
+import graphics.geom.Rectangle;
 import graphics.geom.Matrix;
 import graphics.geom.Point;
-//import flash.display.Graphics;
 import format.gfx.Gfx;
 
 class PathSegment
