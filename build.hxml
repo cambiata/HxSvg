@@ -7,31 +7,26 @@
 --interp
 
 #--next
-
 #-neko bin-neko/Example.n
 #-cmd neko bin-neko/Example.n
 
 # --next
-
 # -swf bin-swf/Example.swf
 
+--next
+-js bin-js/Example.js
+-dce full
+-cmd node bin-js/Example.js
+
+--next
+-cpp bin-cpp
+-cmd bin-cpp\Example.exe
+
 # --next
-
-# -js bin-js/Example.js
-# -cmd node bin-js/Example.js
-
-# --next
-
-# -cpp bin-cpp
-# -cmd bin-cpp\Example.exe
-
-# --next
-
 # -java bin-java
 # -cmd java -jar bin-java/Example.jar
 
 # --next
-
 # -cs bin-cs
 # -cmd cd bin-cs/bin
 # -cmd Example.exe
